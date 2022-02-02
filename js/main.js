@@ -87,10 +87,7 @@ class UserSystem {
 			if( !this.fullNameInput.value || this.fullNameInput.value > 30 || !this.usernameInput.value || this.usernameInput.value > 20 || this.bioInput.value > 200 || !this.emailInput.value.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 				return alert("Thomething is wrong with you")
 			}
-		
-			if( !this.newPassword.value || this.newPassword.value.length < 8 || this.newPassword.value != this.confirmPassword.value) {
-				return alert("Something is wrong with you")
-			}
+	
 			let users = this.users
 			const user = users.find(user => user.userId == userId)
 			user.fullName = this.fullNameInput.value
@@ -100,16 +97,59 @@ class UserSystem {
 			user.password = this.confirmPassword.value
 			this.save(users)
 			this.renderUsers(users)
+			window.location = 'index.html'
+
 		}
 	}
-	deleteUser () {}
+
+	deleteUser (element) {
+		let users = this.users
+		const userId = element.parentNode.parentNode.parentNode.dataset.userid
+		const index = users.findIndex(user => user.userId == userId)
+		element.parentNode.parentNode.parentNode.remove()
+		users.splice(index, 1)
+		this.save(users)
+	}
+
+
+	createUser () {
+		let saveChanges = document.querySelector('#saveChanges')
+		saveChanges.onclick = el => {
+			el.preventDefault()
+			let users = this.users
+			
+			if( !this.fullNameInput.value || this.fullNameInput.value > 30 || !this.usernameInput.value || this.usernameInput.value > 20 || this.bioInput.value > 200 || !this.emailInput.value.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+				return alert("Something is wrong with you")
+			}
+
+			if( !this.newPassword.value || this.newPassword.value.length < 8 || this.newPassword.value != this.confirmPassword.value || !this.confirmPassword.value) {
+				return alert("Password is wrong with you")
+			}
+
+			users.push({
+				userId : users.length ? users.length + 1 : 1,
+				fullName : this.fullNameInput.value,
+				username : this.usernameInput.value,
+				email : this.emailInput.value,
+				bio : this.bioInput.value ? this.bioInput.value : null,
+				password : this.confirmPassword.value,
+				selected: false, 
+				active: false 
+			})
+			this.save(users)
+			this.renderUsers(users)
+			window.location = 'index.html'
+		}
+	}
+
+	
 	paginateUsers () {}
-	createUser () {}
 }
 
+let newUser = document.querySelector('#newUser')
 
 const userSystem = new UserSystem()
-userSystem.renderUsers({})
+userSystem.renderUsers({}	)
 
 
 // event handlers
@@ -125,4 +165,18 @@ function editUser(html) {
 	userSystem.editUser(html)
 	userSystem.clearInput()
 }
+
+
+function deleteUsers(html) {
+	userSystem.deleteUser(html)
+}
+
+newUser.onclick = el => {
+	el.preventDefault
+	userSystem.clearInput()
+	userSystem.createUser()
+
+}
+
+
 

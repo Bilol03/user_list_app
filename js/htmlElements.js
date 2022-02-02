@@ -13,7 +13,7 @@ const usersEl = ({ fullName, userId, selected, active }) => {
 		  <td class="text-center align-middle">
 		    <div class="btn-group align-top">
 		        <button onclick="editUser(this)" class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button>
-		        <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
+		        <button onclick="deleteUsers(this)" class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
 		    </div>
 		  </td>
 		</tr>
