@@ -1,4 +1,5 @@
 class UserSystem {
+	paginationEl = document.querySelector('.pagination')
 	confirmPassword = document.querySelector('#confirmPassword')
 	fullNameInput = document.querySelector('#fullNameInput')
 	usernameInput = document.querySelector('#usernameInput')
@@ -6,8 +7,9 @@ class UserSystem {
 	emailInput = document.querySelector('#emailInput')
 	tableBody = document.querySelector('#tableBody')
 	bioInput = document.querySelector('#bioInput')
+
 	page = 1
-	limit = 10
+	limit = 2
 
 	get users () {
 		const users = window.localStorage.getItem('users')
@@ -142,15 +144,32 @@ class UserSystem {
 		}
 	}
 
-	
-	paginateUsers () {}
+	paginationButtons () {
+		const numberOfPages = Math.ceil(this.users.length / this.limit)
+
+		this.paginationEl.innerHTML = null
+		for(let page = 1; page <= numberOfPages; page++) {
+			let newButtonEl = buttonsEl({ page })
+			this.paginationEl.innerHTML += newButtonEl
+		}
+	}
+
+	findPage (html) {
+		const buttons = document.querySelectorAll('.page-item')
+		buttons.forEach(el => el.classList.remove('active'))
+
+		html.classList.add('active')
+		this.renderUsers({ page: html.dataset.page })
+	}
+
 }
+
 
 let newUser = document.querySelector('#newUser')
 
 const userSystem = new UserSystem()
 userSystem.renderUsers({}	)
-
+userSystem.paginationButtons()
 
 // event handlers
 function selectUser (html) {
@@ -178,5 +197,9 @@ newUser.onclick = el => {
 
 }
 
+
+function findPage(html) {
+	userSystem.findPage(html)
+}
 
 

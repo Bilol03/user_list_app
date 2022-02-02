@@ -19,3 +19,10 @@ const usersEl = ({ fullName, userId, selected, active }) => {
 		</tr>
 	`
 }
+
+
+const buttonsEl = ({ page }) => {
+	return `
+		<li data-page="${page}" onclick="findPage(this)" class="page-item ${page == 1 ? 'active' : ''}"><a href="#" class="page-link">${page}</a></li>
+	`
+}
