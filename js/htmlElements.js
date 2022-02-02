@@ -12,7 +12,7 @@ const usersEl = ({ fullName, userId, selected, active }) => {
 		  <td class="text-center align-middle"><i onclick="toggleUser(this)" class="fa fa-fw text-secondary cursor-pointer fa-toggle-${active == true ? 'on' : 'off'}"></i></td>
 		  <td class="text-center align-middle">
 		    <div class="btn-group align-top">
-		        <button onclick="editUser()" class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button>
+		        <button onclick="editUser(this)" class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button>
 		        <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
 		    </div>
 		  </td>

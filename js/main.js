@@ -79,24 +79,34 @@ class UserSystem {
 		this.fullNameInput.value = null	
 	}
 
-	editUser () {
-		if( !this.fullNameInput.value || this.fullNameInput.value > 30 || !this.usernameInput.value || this.usernameInput.value > 20 || this.bioInput.value > 200 || !this.emailInput.value.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-			return alert("Thomething is wrong with you")
-		}
+	editUser (element) {
+		const userId = element.parentNode.parentNode.parentNode.dataset.userid
+		let saveChanges = document.querySelector('#saveChanges')
+		saveChanges.onclick = el => {
+			el.preventDefault()
+			if( !this.fullNameInput.value || this.fullNameInput.value > 30 || !this.usernameInput.value || this.usernameInput.value > 20 || this.bioInput.value > 200 || !this.emailInput.value.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+				return alert("Thomething is wrong with you")
+			}
 		
-		if( !this.newPassword.value || this.newPassword.value.length < 8 || this.newPassword.value != this.confirmPassword.value) {
-			return alert("Something is wrong with you")
+			if( !this.newPassword.value || this.newPassword.value.length < 8 || this.newPassword.value != this.confirmPassword.value) {
+				return alert("Something is wrong with you")
+			}
+			let users = this.users
+			const user = users.find(user => user.userId == userId)
+			user.fullName = this.fullNameInput.value
+			user.username = this.usernameInput.value
+			user.email = this.emailInput.value
+			user.bio = this.bioInput.value
+			user.password = this.confirmPassword.value
+			this.save(users)
+			this.renderUsers(users)
 		}
-
-
-		
 	}
 	deleteUser () {}
 	paginateUsers () {}
 	createUser () {}
 }
 
-let saveChanges = document.querySelector('#saveChanges')
 
 const userSystem = new UserSystem()
 userSystem.renderUsers({})
@@ -111,11 +121,8 @@ function toggleUser (html) {
 	userSystem.toggleUser(html)
 }
 
-function editUser() {
+function editUser(html) {
+	userSystem.editUser(html)
 	userSystem.clearInput()
 }
 
-saveChanges.onclick = (el) => {
-	el.preventDefault()
-	userSystem.editUser()
-}
