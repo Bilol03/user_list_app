@@ -30,7 +30,7 @@ class UserSystem {
 		
 	}
 
-	renderUsers ({ active, search, page }) {
+	renderUsers ({ active, search, page }) {1
 		// filter
 		let users = this.users.filter(user => {
 			let act = typeof(active) == 'boolean' ? user.active == active : true
@@ -130,9 +130,12 @@ class UserSystem {
 			if( !this.newPassword.value || this.newPassword.value.length < 8 || this.newPassword.value != this.confirmPassword.value || !this.confirmPassword.value) {
 				return alert("Password is wrong with you")
 			}
+			let date = Date.now().toString().slice(-4)
+
 
 			users.push({
-				userId : users.length ? users.length + 1 : 1,
+				// userId : users.length ? users.length + 1 : 1,
+				userId: date,
 				fullName : this.fullNameInput.value,
 				username : this.usernameInput.value,
 				email : this.emailInput.value,
@@ -260,8 +263,6 @@ searchInput.onkeyup = el => {
 	el.preventDefault()
 	userSystem.renderUsers({search : searchInput.value})
 }
-
-
 
 
 
