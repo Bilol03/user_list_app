@@ -1,13 +1,16 @@
 class UserSystem {
+	usersStatusDisabled = document.querySelector("#users-status-disabled")
+	usersStatusActive = document.querySelector("#users-status-active")
+	usersStatusAny = document.querySelector("#users-status-any")
 	confirmPassword = document.querySelector('#confirmPassword')
 	fullNameInput = document.querySelector('#fullNameInput')
 	usernameInput = document.querySelector('#usernameInput')
+	paginationPart = document.querySelector('.pagination')
 	newPassword = document.querySelector('#newPassword')
-	paginationEl = document.querySelector('.pagination')
 	emailInput = document.querySelector('#emailInput')
 	tableBody = document.querySelector('#tableBody')
 	bioInput = document.querySelector('#bioInput')
-
+	
 	page = 1
 	limit = 10
 
@@ -144,13 +147,35 @@ class UserSystem {
 		}
 	}
 
+	selectUser (element, parentElement) {
+		const users = this.users
+
+		if(element) {
+			const userId = element.parentNode.parentNode.parentNode.dataset.userid
+			const user = users.find(user => user.userId == userId)
+			user.selected = element.checked
+		}
+
+		if(parentElement) {
+			for(let user of users) {
+				user.selected = parentElement.checked
+
+				let htmlEl = document.querySelector('#item-' + user.userId)
+				if(htmlEl) htmlEl.checked = parentElement.checked
+			}
+		}
+
+		this.save(users)
+	}
+
+
 	paginationButtons () {
 		const numberOfPages = Math.ceil(this.users.length / this.limit)
 
-		this.paginationEl.innerHTML = null
+		this.paginationPart.innerHTML = null
 		for(let page = 1; page <= numberOfPages; page++) {
 			let newButtonEl = buttonsEl({ page })
-			this.paginationEl.innerHTML += newButtonEl
+			this.paginationPart.innerHTML += newButtonEl
 		}
 	}
 
@@ -162,14 +187,39 @@ class UserSystem {
 		this.renderUsers({ page: html.dataset.page })
 	}
 
+	disabled () {
+		this.usersStatusDisabled.onclick = el => {
+			this.renderUsers({active : false})
+		}
+	}
+
+	
+	active() {
+		this.usersStatusActive.onclick = el => {
+			this.renderUsers({active : true})
+		}
+	}
+	
+	any () {
+		let users = this.users
+		this.usersStatusAny.onclick = el => {
+			this.renderUsers(users)
+		}
+	}
+
 }
 
 
 let newUser = document.querySelector('#newUser')
 
+
+
 const userSystem = new UserSystem()
 userSystem.renderUsers({})
 userSystem.paginationButtons()
+userSystem.disabled()
+userSystem.active()
+userSystem.any()
 const searchInput = document.querySelector('.w-100')
 
 // event handlers
@@ -198,6 +248,10 @@ newUser.onclick = el => {
 }
 
 
+function selectAllUsers (html) {
+	userSystem.selectUser(null, html)
+}
+
 function findPage(html) {
 	userSystem.findPage(html)
 }
@@ -206,5 +260,8 @@ searchInput.onkeyup = el => {
 	el.preventDefault()
 	userSystem.renderUsers({search : searchInput.value})
 }
+
+
+
 
 
