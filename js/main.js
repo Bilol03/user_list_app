@@ -1,15 +1,15 @@
 class UserSystem {
-	paginationEl = document.querySelector('.pagination')
 	confirmPassword = document.querySelector('#confirmPassword')
 	fullNameInput = document.querySelector('#fullNameInput')
 	usernameInput = document.querySelector('#usernameInput')
 	newPassword = document.querySelector('#newPassword')
+	paginationEl = document.querySelector('.pagination')
 	emailInput = document.querySelector('#emailInput')
 	tableBody = document.querySelector('#tableBody')
 	bioInput = document.querySelector('#bioInput')
 
 	page = 1
-	limit = 2
+	limit = 10
 
 	get users () {
 		const users = window.localStorage.getItem('users')
@@ -168,8 +168,9 @@ class UserSystem {
 let newUser = document.querySelector('#newUser')
 
 const userSystem = new UserSystem()
-userSystem.renderUsers({}	)
+userSystem.renderUsers({})
 userSystem.paginationButtons()
+const searchInput = document.querySelector('.w-100')
 
 // event handlers
 function selectUser (html) {
@@ -194,12 +195,16 @@ newUser.onclick = el => {
 	el.preventDefault
 	userSystem.clearInput()
 	userSystem.createUser()
-
 }
 
 
 function findPage(html) {
 	userSystem.findPage(html)
+}
+
+searchInput.onkeyup = el => {
+	el.preventDefault()
+	userSystem.renderUsers({search : searchInput.value})
 }
 
 
